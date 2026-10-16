@@ -11,14 +11,14 @@ Show your keystrokes and mouse clicks on screen during live demos, so the audien
 
 **macOS**
 ```bash
-git clone https://github.com/<you>/demo-input-overlay && cd demo-input-overlay
+git clone https://github.com/justintime1888/demo-input-overlay && cd demo-input-overlay
 bash setup-mac.sh
 ```
 After the script runs, finish the permission steps it prints. macOS only lets you grant Accessibility and Input Monitoring access in System Settings.
 
 **Windows** (PowerShell)
 ```powershell
-git clone https://github.com/<you>/demo-input-overlay; cd demo-input-overlay
+git clone https://github.com/justintime1888/demo-input-overlay; cd demo-input-overlay
 powershell -ExecutionPolicy Bypass -File .\setup-windows.ps1
 ```
 Then set up Carnac from its tray icon: Preferences → font size 40–60 → opacity ~100% → dark background → placement bottom-left → **Save** → **Start**.
