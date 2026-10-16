@@ -7,11 +7,14 @@ $pt = @("$env:LOCALAPPDATA\PowerToys\PowerToys.exe", "$env:ProgramFiles\PowerToy
 if (-not $pt) { throw "PowerToys.exe not found after install" }
 if (-not (Get-Process PowerToys -ErrorAction SilentlyContinue)) { Start-Process $pt; Start-Sleep 8 }
 
+# PowerToys ignores settings files that start with a BOM, which Set-Content -Encoding utf8 writes on PS 5.1
+function Write-NoBom($path, $text) { [IO.File]::WriteAllText($path, $text, (New-Object Text.UTF8Encoding $false)) }
+
 # Enable Mouse Highlighter, always on, with big rings
 $root = "$env:LOCALAPPDATA\Microsoft\PowerToys"
 $main = Get-Content "$root\settings.json" -Raw | ConvertFrom-Json
 $main.enabled.MouseHighlighter = $true
-$main | ConvertTo-Json -Depth 10 -Compress | Set-Content "$root\settings.json" -Encoding utf8
+Write-NoBom "$root\settings.json" ($main | ConvertTo-Json -Depth 10 -Compress)
 
 $mh = "$root\MouseHighlighter\settings.json"
 if (Test-Path $mh) {
@@ -20,7 +23,7 @@ if (Test-Path $mh) {
     $j.properties.highlight_radius.value = 45
     $j.properties.highlight_fade_delay_ms.value = 600
     if ($j.properties.ripple_size) { $j.properties.ripple_size.value = 90 }
-    $j | ConvertTo-Json -Depth 10 -Compress | Set-Content $mh -Encoding utf8
+    Write-NoBom $mh ($j | ConvertTo-Json -Depth 10 -Compress)
 } else {
     Write-Warning "Mouse Highlighter settings not created yet: open PowerToys > Mouse Utilities > Mouse Highlighter, turn on 'Activate on startup', then rerun."
 }
